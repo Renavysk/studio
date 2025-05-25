@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: ReflectionPageProps) {
   const themeName = currentTheme ? currentTheme.name : "Reflexão";
   return {
     title: `${themeName} | Palavras de Conforto`,
-    description: `Uma reflexão reconfortante sobre ${themeName.toLowerCase()} de Palavras de Conforto.`,
+    description: currentTheme ? currentTheme.description : `Uma reflexão reconfortante sobre ${themeName.toLowerCase()} de Palavras de Conforto.`,
   };
 }
 
@@ -34,7 +34,12 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
   let reflectionText = "";
   let errorOccurred = false;
   try {
-    const reflectionInput: GenerateReflectionInput = { theme: currentTheme.name }; // theme.name is already in Portuguese from themes.ts
+    const reflectionInput: GenerateReflectionInput = {
+      theme: currentTheme.name,
+      baseReflection: currentTheme.baseReflection,
+      verseReference: currentTheme.verseReference,
+      verseText: currentTheme.verseText,
+    };
     const reflectionOutput = await generateReflection(reflectionInput);
     reflectionText = reflectionOutput.reflection;
   } catch (error) {
@@ -50,7 +55,7 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
         <div className="relative w-full max-w-md aspect-[4/3] mb-8">
           <Image
             src="https://placehold.co/400x300.png" 
-            alt={`Imagem estilo Ghibli de Jesus representando o tema ${currentTheme.name}`}
+            alt={`Imagem estilo Ghibli representando o tema ${currentTheme.name}`}
             data-ai-hint={currentTheme.imageHint}
             fill
             className="object-contain rounded-xl shadow-xl"
@@ -58,7 +63,8 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
           />
         </div>
         
-        <h2 className="text-4xl font-bold text-primary mb-6 text-center drop-shadow-sm">{currentTheme.name}</h2>
+        <h2 className="text-4xl font-bold text-primary mb-2 text-center drop-shadow-sm">{currentTheme.name}</h2>
+        <p className="text-lg text-muted-foreground mb-6 text-center max-w-xl">{currentTheme.description}</p>
         
         {errorOccurred ? (
           <div className="bg-destructive/10 border border-destructive text-destructive p-6 rounded-xl shadow-lg w-full max-w-2xl text-center">
