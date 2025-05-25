@@ -23,7 +23,7 @@ export default function WelcomePage() {
       <div className="flex items-center justify-center mb-4">
         <HeartHandshake className="text-primary h-12 w-12 mr-3" />
         <h1 className="text-5xl font-bold text-primary drop-shadow-sm">
-          Palavras de Conforto
+          Jesus Disse
         </h1>
       </div>
       

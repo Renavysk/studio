@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -96,10 +97,10 @@ export function ReflectionDisplay({ reflection, themeName }: ReflectionDisplayPr
   };
 
   const handleShare = () => {
-    const shareText = `Reflexão sobre "${themeName}":\n\n${reflection}\n\nCompartilhado de Palavras de Conforto.`;
+    const shareText = `Reflexão sobre "${themeName}" de Jesus Disse:\n\n${reflection}\n\nCompartilhado de Jesus Disse.`;
     if (navigator.share) {
       navigator.share({
-        title: `Palavras de Conforto: ${themeName}`,
+        title: `Jesus Disse: ${themeName}`,
         text: shareText,
       }).catch(err => {
         console.error("Error sharing:", err);

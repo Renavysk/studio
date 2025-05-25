@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: ReflectionPageProps) {
   const currentTheme = themes.find(t => t.id === themeId);
   const themeName = currentTheme ? currentTheme.name : "Reflexão";
   return {
-    title: `${themeName} | Palavras de Conforto`,
-    description: currentTheme ? currentTheme.description : `Uma reflexão reconfortante sobre ${themeName.toLowerCase()} de Palavras de Conforto.`,
+    title: `${themeName} | Jesus Disse`,
+    description: currentTheme ? currentTheme.description : `Uma reflexão reconfortante sobre ${themeName.toLowerCase()} de Jesus Disse.`,
   };
 }
 

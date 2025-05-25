@@ -7,7 +7,7 @@ export function Header() {
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 text-2xl font-semibold hover:opacity-90 transition-opacity">
           <BookOpenText size={32} />
-          Palavras de Conforto
+          Jesus Disse
         </Link>
         {/* Future navigation links can go here */}
       </div>

@@ -63,19 +63,19 @@ Mantenha o tom compassivo e amoroso de Jesus.`,
     safetySettings: [
       {
         category: 'HARM_CATEGORY_HATE_SPEECH',
-        threshold: 'BLOCK_ONLY_HIGH',
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE', // Alterado de BLOCK_ONLY_HIGH
       },
       {
         category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-        threshold: 'BLOCK_ONLY_HIGH',
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE', // Alterado de BLOCK_ONLY_HIGH
       },
       {
         category: 'HARM_CATEGORY_HARASSMENT',
-        threshold: 'BLOCK_ONLY_HIGH',
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE', // Alterado de BLOCK_ONLY_HIGH
       },
       {
         category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-        threshold: 'BLOCK_ONLY_HIGH',
+        threshold: 'BLOCK_NONE', // Alterado de BLOCK_ONLY_HIGH para ser mais permissivo
       },
     ],
   },
@@ -90,7 +90,7 @@ const generateReflectionFlow = ai.defineFlow(
   async input => {
     const {output} = await prompt(input);
     if (!output || !output.reflection) {
-      console.error('generateReflectionFlow: AI model did not return a valid reflection for input:', JSON.stringify(input));
+      console.error('generateReflectionFlow: AI model did not return a valid reflection for input:', JSON.stringify(input), 'Output received:', JSON.stringify(output));
       throw new Error('O modelo de IA não retornou uma reflexão válida.');
     }
     return output;

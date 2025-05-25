@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Palavras de Conforto',
+  title: 'Jesus Disse',
   description: 'Encontre consolo e orientação em reflexões baseadas nos ensinamentos de Jesus.',
 };
 
