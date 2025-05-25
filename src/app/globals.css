@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 208 100% 97%; /* Very light blue #F0F8FF - Used for component backgrounds like Card if not overridden */
+    --background: 207 90% 77%; /* Solid light blue from image */
     --foreground: 197 100% 12%; /* Darker blue, for better contrast on light backgrounds */
 
     --card: 0 0% 100%; /* White cards */
@@ -98,12 +98,7 @@
     @apply border-border;
   }
   body {
-    background-image: url('https://storage.googleapis.com/project-upload-prod/187f793f-9b81-4e75-824a-f0a39f627f08');
-    background-color: transparent; /* Explicitly set background color to transparent */
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Keeps the background fixed during scroll */
+    background-color: hsl(var(--background)); /* Use the new background color */
     @apply text-foreground; /* Apply default text color from variables */
     font-feature-settings: "rlig" 1, "calt" 1; /* Consistent with Geist font */
     min-height: 100vh; /* Ensure body takes at least full viewport height */
