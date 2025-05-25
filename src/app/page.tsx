@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,15 +10,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { processText, type SimpleTextInput } from '@/ai/flows/simple-text-flow';
 // import { narrateText, type NarrateTextInput } from '@/ai/flows/narrate-text-flow'; // Narration removed
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Volume2, AlertTriangle } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 export default function SimpleAIPage() {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [isLoadingText, setIsLoadingText] = useState(false);
-  // const [isLoadingAudio, setIsLoadingAudio] = useState(false); // Narration removed
-  // const [audioDataUri, setAudioDataUri] = useState<string | null>(null); // Narration removed
-  // const [audioError, setAudioError] = useState<string | null>(null); // Narration removed
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,8 +31,6 @@ export default function SimpleAIPage() {
 
     setIsLoadingText(true);
     setOutputText('');
-    // setAudioDataUri(null); // Narration removed
-    // setAudioError(null); // Narration removed
 
     try {
       const textInput: SimpleTextInput = { inputText };
@@ -44,47 +40,6 @@ export default function SimpleAIPage() {
         title: 'Sucesso!',
         description: 'Texto processado pela IA.',
       });
-
-      // Narration functionality removed
-      // if (textResult.outputText) {
-      //   setIsLoadingAudio(true);
-      //   try {
-      //     const narrationInput: NarrateTextInput = { textToNarrate: textResult.outputText };
-      //     const audioResult = await narrateText(narrationInput);
-      //     if (audioResult.audioDataUri) {
-      //       setAudioDataUri(audioResult.audioDataUri);
-      //       toast({
-      //         title: 'Narração Pronta!',
-      //         description: 'O áudio da resposta foi gerado.',
-      //       });
-      //     } else {
-      //       setAudioError('Nenhum áudio retornado pelo serviço.');
-      //       toast({
-      //         title: 'Erro na Narração',
-      //         description: 'O serviço não retornou dados de áudio.',
-      //         variant: 'destructive',
-      //       });
-      //     }
-      //   } catch (narrationError: any) {
-      //     console.error('Error calling narrateText flow on client:', narrationError);
-      //     let narrationErrorMessage = 'Falha ao gerar narração. Verifique os logs do servidor Genkit.';
-      //     if (narrationError instanceof Error && narrationError.message) {
-      //       narrationErrorMessage = narrationError.message;
-      //     } else if (typeof narrationError === 'string') {
-      //       narrationErrorMessage = narrationError;
-      //     } else if (narrationError && typeof narrationError === 'object' && narrationError.toString() !== '[object Object]') {
-      //       narrationErrorMessage = narrationError.toString();
-      //     }
-      //     setAudioError(narrationErrorMessage);
-      //     toast({
-      //       title: 'Erro de Narração',
-      //       description: narrationErrorMessage,
-      //       variant: 'destructive',
-      //     });
-      //   } finally {
-      //     setIsLoadingAudio(false);
-      //   }
-      // }
 
     } catch (error: any) {
       console.error('Error calling processText flow on client:', error);
@@ -110,9 +65,20 @@ export default function SimpleAIPage() {
   return (
     <main className="flex flex-col items-center justify-center flex-grow p-4 md:p-8">
       <Card className="w-full max-w-lg shadow-xl rounded-lg bg-card/90 backdrop-blur-sm">
-        <CardHeader className="rounded-t-lg">
-          <CardTitle className="text-3xl font-semibold text-primary text-center">Jesus Disse</CardTitle>
-          <CardDescription className="text-center text-card-foreground/80">
+        <CardHeader className="rounded-t-lg items-center text-center">
+          <div className="mb-4 rounded-full overflow-hidden shadow-lg border-2 border-primary/50">
+            <Image
+              src="https://storage.googleapis.com/project-upload-prod/4d79428f-bbbf-4514-a28b-27e42e7383cd"
+              alt="Imagem de Jesus sorrindo"
+              width={120}
+              height={120}
+              className="object-cover"
+              data-ai-hint="jesus smile"
+              priority
+            />
+          </div>
+          <CardTitle className="text-3xl font-semibold text-primary">Jesus Disse</CardTitle>
+          <CardDescription className="text-card-foreground/80 mt-1">
             Digite algo abaixo e Jesus tentará processá-lo e responder com sabedoria e amor.
           </CardDescription>
         </CardHeader>
@@ -154,32 +120,9 @@ export default function SimpleAIPage() {
               />
             </div>
           )}
-          {/* Narration UI removed */}
-          {/* {isLoadingAudio && (
-            <div className="mt-4 flex items-center justify-center text-sm text-muted-foreground">
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Gerando narração...
-            </div>
-          )}
-          {audioError && !isLoadingAudio && (
-            <div className="mt-4 p-3 bg-destructive/10 border border-destructive/30 rounded-md text-sm text-destructive flex items-center">
-              <AlertTriangle className="h-5 w-5 mr-2 shrink-0" />
-              <div>
-                <strong>Erro na Narração:</strong> {audioError}
-              </div>
-            </div>
-          )}
-          {audioDataUri && !isLoadingAudio && !audioError && (
-             <div className="mt-4">
-              <h4 className="text-md font-medium text-primary mb-2">Ouça a Resposta:</h4>
-              <audio controls src={audioDataUri} className="w-full rounded-md shadow">
-                Seu navegador não suporta o elemento de áudio.
-              </audio>
-            </div>
-          )} */}
         </CardContent>
       </Card>
-       <footer className="text-center py-6 mt-10 text-sm text-background/80 bg-black/30 backdrop-blur-sm p-4 rounded-md shadow-md max-w-lg w-full">
+       <footer className="text-center py-6 mt-10 text-sm text-foreground/90 bg-background/50 backdrop-blur-sm p-4 rounded-md shadow-md max-w-lg w-full">
         <p>Lembre-se, estas são palavras geradas por IA, inspiradas nos ensinamentos de Jesus.</p>
         <p>Use-as para reflexão e encorajamento.</p>
       </footer>
