@@ -1,21 +1,18 @@
+
 import type {Metadata} from 'next';
-import {Geist, Geist_Mono} from 'next/font/google';
+import { Inter } from 'next/font/google' // Using Inter as a gentle, legible font
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { Header } from './components/Header'; // Assuming Header will be styled by globals
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const inter = Inter({ 
   subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+  variable: '--font-inter' 
 });
 
 export const metadata: Metadata = {
-  title: 'Teste de IA Simplificado',
-  description: 'Um estado simplificado do aplicativo para testar a funcionalidade básica da IA.',
+  title: 'Jesus Disse - Teste IA',
+  description: 'Um estado simplificado do aplicativo para testar a funcionalidade básica da IA com a personalidade de Jesus.',
 };
 
 export default function RootLayout({
@@ -24,9 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased text-foreground bg-background min-h-screen flex flex-col`}>
-        {children}
+    <html lang="pt-BR" className={inter.variable}>
+      <body className="antialiased text-foreground bg-background min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow">
+         {children}
+        </main>
         <Toaster />
       </body>
     </html>
