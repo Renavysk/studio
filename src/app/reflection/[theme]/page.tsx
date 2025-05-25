@@ -1,3 +1,4 @@
+
 import { generateReflection, type GenerateReflectionInput } from '@/ai/flows/generate-reflection';
 import { themes } from '@/lib/themes';
 import { ReflectionDisplay } from '@/app/components/ReflectionDisplay';
@@ -49,8 +50,8 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
         <div className="relative w-full max-w-md aspect-[4/3] mb-8">
           <Image
             src="https://placehold.co/400x300.png" 
-            alt={`Jesus, calmo e acolhedor, em estilo inspirado em Ghibli, representando ${currentTheme.name}`}
-            data-ai-hint="jesus smiling ghibli peaceful"
+            alt={`Imagem estilo Ghibli de Jesus representando o tema ${currentTheme.name}`}
+            data-ai-hint={currentTheme.imageHint}
             fill
             className="object-contain rounded-xl shadow-xl"
             priority

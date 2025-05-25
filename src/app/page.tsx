@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -8,7 +9,7 @@ import { HeartHandshake } from 'lucide-react';
 export default function WelcomePage() {
   return (
     <main className="flex flex-col items-center justify-center flex-grow p-4 text-center animate-fadeIn">
-      <div className="relative w-full max-w-md aspect-square mb-8"> {/* Alterado para max-w-md e aspect-square */}
+      <div className="relative w-full max-w-md aspect-square mb-8">
         <Image 
           src="https://storage.googleapis.com/project-upload-prod/cbe6ae9f-6431-418e-9e7d-605991ac4388"
           alt="Detalhe das mãos de 'A Criação de Adão', de Michelangelo, simbolizando a conexão divina e o toque da vida."
