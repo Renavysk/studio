@@ -59,48 +59,6 @@ export default function SimpleAIPage() {
         description: 'Texto processado pela IA.',
       });
 
-      // Narration logic removed
-      // if (textResult.outputText) {
-      //   setIsLoadingAudio(true);
-      //   try {
-      //     const narrateInput: NarrateTextInput = { textToNarrate: textResult.outputText };
-      //     const narrateResult = await narrateText(narrateInput);
-      //     if (narrateResult && narrateResult.audioDataUri) {
-      //       setAudioDataUri(narrateResult.audioDataUri);
-      //       toast({
-      //         title: 'Narração Pronta!',
-      //         description: 'O áudio da resposta está pronto para ser tocado.',
-      //       });
-      //     } else {
-      //       console.warn('NarrateText flow did not return audioDataUri.');
-      //       setAudioError('A narração foi gerada, mas não contém dados de áudio válidos.');
-      //       toast({
-      //         title: 'Problema na Narração',
-      //         description: 'A narração foi gerada, mas não contém dados de áudio válidos.',
-      //         variant: 'destructive',
-      //       });
-      //     }
-      //   } catch (narrationError: any) {
-      //     console.error('Error calling narrateText flow on client:', narrationError);
-      //     let narrateErrorMessage = 'Falha ao gerar narração. Verifique os logs do servidor Genkit.';
-      //     if (narrationError instanceof Error && narrationError.message) {
-      //       narrateErrorMessage = narrationError.message;
-      //     } else if (typeof narrationError === 'string') {
-      //       narrateErrorMessage = narrationError;
-      //     } else if (narrationError && typeof narrationError === 'object' && narrationError.toString() !== '[object Object]') {
-      //       narrateErrorMessage = narrationError.toString();
-      //     }
-      //     setAudioError(narrateErrorMessage);
-      //     toast({
-      //       title: 'Erro de Narração',
-      //       description: narrateErrorMessage,
-      //       variant: 'destructive',
-      //     });
-      //   } finally {
-      //     setIsLoadingAudio(false);
-      //   }
-      // }
-
     } catch (error: any) {
       console.error('Error calling processText flow on client:', error);
       let errorMessage = 'Falha ao comunicar com a IA. Verifique os logs do servidor Genkit.';
@@ -178,23 +136,6 @@ export default function SimpleAIPage() {
                 className="w-full h-40 bg-muted/70 rounded-md text-base p-3 leading-relaxed"
                 aria-label="Resposta da IA"
               />
-              {/* Narration UI removed */}
-              {/* {isLoadingAudio && (
-                <div className="mt-4 flex items-center justify-center text-sm text-muted-foreground">
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Gerando narração...
-                </div>
-              )}
-              {audioError && !isLoadingAudio && (
-                <p className="mt-2 text-sm text-destructive text-center">{audioError}</p>
-              )}
-              {audioDataUri && !isLoadingAudio && !audioError && (
-                <div className="mt-4">
-                  <audio controls src={audioDataUri} className="w-full">
-                    Seu navegador não suporta o elemento de áudio.
-                  </audio>
-                </div>
-              )} */}
             </div>
           )}
         </CardContent>
