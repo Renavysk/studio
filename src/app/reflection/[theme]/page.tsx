@@ -33,6 +33,8 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
 
   let reflectionText = "";
   let errorOccurred = false;
+  let clientErrorMessage = "Encontramos um problema ao gerar sua reflexão. Por favor, tente um tema diferente ou volte mais tarde.";
+
   try {
     const reflectionInput: GenerateReflectionInput = {
       theme: currentTheme.name,
@@ -42,9 +44,41 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
     };
     const reflectionOutput = await generateReflection(reflectionInput);
     reflectionText = reflectionOutput.reflection;
-  } catch (error) {
-    console.error(`Error generating reflection for theme "${currentTheme.name}":`, error);
-    reflectionText = "Encontramos um problema ao gerar sua reflexão. Por favor, tente um tema diferente ou volte mais tarde.";
+  } catch (e: any) { // Catch as 'any' to inspect properties
+    console.error(`Error generating reflection for theme "${currentTheme.name}":`);
+    let caughtErrorMessage = "Detalhes do erro não disponíveis";
+
+    if (e instanceof Error) {
+      caughtErrorMessage = e.message;
+      console.error("Type: Error instance");
+      console.error("Message:", e.message);
+      console.error("Stack:", e.stack);
+      console.error("Full error object:", e);
+    } else if (typeof e === 'string') {
+      caughtErrorMessage = e;
+      console.error("Type: string");
+      console.error("Content:", e);
+    } else {
+      console.error("Type: unknown");
+      try {
+        const serializedError = JSON.stringify(e, Object.getOwnPropertyNames(e), 2);
+        console.error("Serialized content:", serializedError);
+        if (e && typeof e.message === 'string') {
+          caughtErrorMessage = e.message;
+        } else if (e && typeof e.toString === 'function' && e.toString() !== '[object Object]') {
+          caughtErrorMessage = e.toString();
+        } else {
+          caughtErrorMessage = "Objeto de erro não padrão. Verifique o console para serialização."
+        }
+      } catch (stringifyError) {
+        console.error("Could not stringify error object:", stringifyError);
+        caughtErrorMessage = "Erro não serializável detectado."
+      }
+      console.error("Full error object:", e);
+    }
+    
+    clientErrorMessage = `Encontramos um problema ao gerar sua reflexão: ${caughtErrorMessage}. Por favor, tente um tema diferente ou volte mais tarde. Verifique os logs do servidor Genkit para detalhes técnicos.`;
+    reflectionText = clientErrorMessage; // Show this more detailed message to the user too
     errorOccurred = true;
   }
 
@@ -69,7 +103,7 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
         {errorOccurred ? (
           <div className="bg-destructive/10 border border-destructive text-destructive p-6 rounded-xl shadow-lg w-full max-w-2xl text-center">
             <h3 className="text-xl font-semibold mb-2">Não Foi Possível Carregar a Reflexão</h3>
-            <p>{reflectionText}</p>
+            <p>{reflectionText}</p> {/* Displaying the more detailed clientErrorMessage */}
           </div>
         ) : (
           <ReflectionDisplay reflection={reflectionText} themeName={currentTheme.name} />
