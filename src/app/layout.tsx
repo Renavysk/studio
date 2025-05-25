@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Words of Comfort',
-  description: 'Find solace and guidance in reflections based on the teachings of Jesus.',
+  title: 'Palavras de Conforto',
+  description: 'Encontre consolo e orientação em reflexões baseadas nos ensinamentos de Jesus.',
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen flex flex-col`}>
         {children}
         <Toaster />

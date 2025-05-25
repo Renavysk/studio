@@ -15,10 +15,10 @@ interface ReflectionPageProps {
 export async function generateMetadata({ params }: ReflectionPageProps) {
   const themeId = params.theme;
   const currentTheme = themes.find(t => t.id === themeId);
-  const themeName = currentTheme ? currentTheme.name : "Reflection";
+  const themeName = currentTheme ? currentTheme.name : "Reflexão";
   return {
-    title: `${themeName} | Words of Comfort`,
-    description: `A comforting reflection on ${themeName.toLowerCase()} from Words of Comfort.`,
+    title: `${themeName} | Palavras de Conforto`,
+    description: `Uma reflexão reconfortante sobre ${themeName.toLowerCase()} de Palavras de Conforto.`,
   };
 }
 
@@ -33,12 +33,12 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
   let reflectionText = "";
   let errorOccurred = false;
   try {
-    const reflectionInput: GenerateReflectionInput = { theme: currentTheme.name };
+    const reflectionInput: GenerateReflectionInput = { theme: currentTheme.name }; // theme.name is already in Portuguese from themes.ts
     const reflectionOutput = await generateReflection(reflectionInput);
     reflectionText = reflectionOutput.reflection;
   } catch (error) {
     console.error(`Error generating reflection for theme "${currentTheme.name}":`, error);
-    reflectionText = "We encountered an issue generating your reflection. Please try a different theme or come back later.";
+    reflectionText = "Encontramos um problema ao gerar sua reflexão. Por favor, tente um tema diferente ou volte mais tarde.";
     errorOccurred = true;
   }
 
@@ -48,8 +48,8 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
       <main className="container mx-auto py-10 px-4 flex flex-col items-center flex-grow">
         <div className="relative w-full max-w-md aspect-[4/3] mb-8">
           <Image
-            src="https://placehold.co/400x300.png" // Ghibli-style Jesus, smiling and calm
-            alt={`Jesus, calm and welcoming, in a Ghibli-inspired style, representing ${currentTheme.name}`}
+            src="https://placehold.co/400x300.png" 
+            alt={`Jesus, calmo e acolhedor, em estilo inspirado em Ghibli, representando ${currentTheme.name}`}
             data-ai-hint="jesus smiling ghibli peaceful"
             fill
             className="object-contain rounded-xl shadow-xl"
@@ -61,7 +61,7 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
         
         {errorOccurred ? (
           <div className="bg-destructive/10 border border-destructive text-destructive p-6 rounded-xl shadow-lg w-full max-w-2xl text-center">
-            <h3 className="text-xl font-semibold mb-2">Unable to Load Reflection</h3>
+            <h3 className="text-xl font-semibold mb-2">Não Foi Possível Carregar a Reflexão</h3>
             <p>{reflectionText}</p>
           </div>
         ) : (
@@ -71,12 +71,12 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
         <Button asChild variant="outline" className="mt-10 rounded-full shadow hover:shadow-md transition-shadow">
           <Link href="/themes" className="flex items-center gap-2">
             <ArrowLeftCircle size={20} />
-            Back to Themes
+            Voltar aos Temas
           </Link>
         </Button>
       </main>
       <footer className="text-center py-6 text-muted-foreground text-sm">
-        May these words bring you peace and understanding.
+        Que estas palavras lhe tragam paz e compreensão.
       </footer>
     </div>
   );

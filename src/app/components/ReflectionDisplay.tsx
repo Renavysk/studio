@@ -23,19 +23,19 @@ export function ReflectionDisplay({ reflection, themeName }: ReflectionDisplayPr
   useEffect(() => {
     audioRef.current = new Audio();
     
-    const currentAudioRef = audioRef.current; // Capture for cleanup
+    const currentAudioRef = audioRef.current; 
 
     currentAudioRef.onended = () => setIsPlaying(false);
     currentAudioRef.onplaying = () => setIsPlaying(true);
     currentAudioRef.onpause = () => setIsPlaying(false);
     currentAudioRef.onerror = (e) => {
       console.error("Audio error:", e);
-      setAudioError("Error playing audio. The audio file might be corrupted or unsupported.");
+      setAudioError("Erro ao reproduzir o áudio. O arquivo de áudio pode estar corrompido ou não ser suportado.");
       setIsPlaying(false);
       setIsLoadingAudio(false);
       toast({
-        title: "Audio Playback Error",
-        description: "Could not play the audio. Please try again or check your connection.",
+        title: "Erro na Reprodução de Áudio",
+        description: "Não foi possível reproduzir o áudio. Tente novamente ou verifique sua conexão.",
         variant: "destructive",
       });
     };
@@ -43,7 +43,7 @@ export function ReflectionDisplay({ reflection, themeName }: ReflectionDisplayPr
     return () => {
       if (currentAudioRef) {
         currentAudioRef.pause();
-        currentAudioRef.src = ''; // Release audio resources
+        currentAudioRef.src = ''; 
       }
     };
   }, [toast]);
@@ -55,12 +55,12 @@ export function ReflectionDisplay({ reflection, themeName }: ReflectionDisplayPr
       audioRef.current.pause();
     } else {
       if (audioSrc) {
-        audioRef.current.src = audioSrc; // Ensure src is set before play
+        audioRef.current.src = audioSrc; 
         audioRef.current.play().catch(err => {
           console.error("Error initiating playback:", err);
-          setAudioError("Playback failed. Your browser might have blocked autoplay.");
+          setAudioError("Falha na reprodução. Seu navegador pode ter bloqueado a reprodução automática.");
           setIsPlaying(false);
-          toast({ title: "Playback Issue", description: "Could not start audio. Try interacting with the page first.", variant: "destructive"});
+          toast({ title: "Problema na Reprodução", description: "Não foi possível iniciar o áudio. Tente interagir com a página primeiro.", variant: "destructive"});
         });
       } else {
         setIsLoadingAudio(true);
@@ -73,19 +73,19 @@ export function ReflectionDisplay({ reflection, themeName }: ReflectionDisplayPr
             audioRef.current.src = narrationOutput.audioDataUri;
             audioRef.current.play().catch(err => {
               console.error("Error initiating playback after load:", err);
-              setAudioError("Playback failed. Your browser might have blocked autoplay.");
+              setAudioError("Falha na reprodução. Seu navegador pode ter bloqueado a reprodução automática.");
               setIsPlaying(false);
-              toast({ title: "Playback Issue", description: "Could not start audio. Try interacting with the page first.", variant: "destructive"});
+              toast({ title: "Problema na Reprodução", description: "Não foi possível iniciar o áudio. Tente interagir com a página primeiro.", variant: "destructive"});
             });
           } else {
             throw new Error("Audio data URI is empty.");
           }
         } catch (error) {
           console.error("Error narrating reflection:", error);
-          setAudioError("Failed to load audio narration.");
+          setAudioError("Falha ao carregar a narração em áudio.");
           toast({
-            title: "Audio Generation Error",
-            description: "Could not load the audio narration. Please try again later.",
+            title: "Erro na Geração de Áudio",
+            description: "Não foi possível carregar a narração em áudio. Tente novamente mais tarde.",
             variant: "destructive",
           });
         } finally {
@@ -96,25 +96,25 @@ export function ReflectionDisplay({ reflection, themeName }: ReflectionDisplayPr
   };
 
   const handleShare = () => {
-    const shareText = `Reflection on "${themeName}":\n\n${reflection}\n\nShared from Words of Comfort.`;
+    const shareText = `Reflexão sobre "${themeName}":\n\n${reflection}\n\nCompartilhado de Palavras de Conforto.`;
     if (navigator.share) {
       navigator.share({
-        title: `Words of Comfort: ${themeName}`,
+        title: `Palavras de Conforto: ${themeName}`,
         text: shareText,
       }).catch(err => {
         console.error("Error sharing:", err);
-        toast({ title: "Share Failed", description: "Could not share. Please try again.", variant: "destructive"});
+        toast({ title: "Falha ao Compartilhar", description: "Não foi possível compartilhar. Tente novamente.", variant: "destructive"});
       });
     } else {
       navigator.clipboard.writeText(shareText).then(() => {
         toast({
-          title: "Copied to clipboard!",
-          description: "Reflection copied. You can now paste it to share.",
+          title: "Copiado para a área de transferência!",
+          description: "Reflexão copiada. Agora você pode colá-la para compartilhar.",
         });
       }).catch(() => {
          toast({
-          title: "Copy Failed",
-          description: "Could not copy to clipboard. Please try manually.",
+          title: "Falha ao Copiar",
+          description: "Não foi possível copiar para a área de transferência. Tente manualmente.",
           variant: "destructive",
         });
       });
@@ -143,11 +143,11 @@ export function ReflectionDisplay({ reflection, themeName }: ReflectionDisplayPr
             ) : (
               <PlayCircle className="mr-2 h-5 w-5" />
             )}
-            {isLoadingAudio ? 'Loading Audio...' : isPlaying ? 'Pause Audio' : 'Play Audio'}
+            {isLoadingAudio ? 'Carregando Áudio...' : isPlaying ? 'Pausar Áudio' : 'Reproduzir Áudio'}
           </Button>
           <Button onClick={handleShare} variant="outline" className="rounded-full px-6 py-3 text-base shadow-md hover:shadow-lg transition-shadow">
             <Share2 className="mr-2 h-5 w-5" />
-            Share Reflection
+            Compartilhar Reflexão
           </Button>
         </div>
         {audioError && (

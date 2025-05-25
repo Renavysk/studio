@@ -2,28 +2,28 @@ export type Theme = {
   id: string;
   name: string;
   imageUrl: string;
-  imageHint: string; // For data-ai-hint to find Ghibli-style images
+  imageHint: string; // For data-ai-hint to find Ghibli-style images (keep in English)
 };
 
 export const themes: Theme[] = [
-  { id: "anxiety", name: "Anxiety", imageUrl: "https://placehold.co/300x200.png", imageHint: "calm serene" },
-  { id: "forgiveness", name: "Forgiveness", imageUrl: "https://placehold.co/300x200.png", imageHint: "open hands" },
-  { id: "purpose", name: "Purpose", imageUrl: "https://placehold.co/300x200.png", imageHint: "path light" },
-  { id: "faith", name: "Faith", imageUrl: "https://placehold.co/300x200.png", imageHint: "mustard seed" },
-  { id: "love", name: "Love", imageUrl: "https://placehold.co/300x200.png", imageHint: "heart warming" },
-  { id: "hope", name: "Hope", imageUrl: "https://placehold.co/300x200.png", imageHint: "sunrise new" },
-  { id: "wisdom", name: "Wisdom", imageUrl: "https://placehold.co/300x200.png", imageHint: "ancient tree" },
-  { id: "gratitude", name: "Gratitude", imageUrl: "https://placehold.co/300x200.png", imageHint: "thankful heart" },
-  { id: "patience", name: "Patience", imageUrl: "https://placehold.co/300x200.png", imageHint: "waiting peacefully" },
-  { id: "strength", name: "Strength", imageUrl: "https://placehold.co/300x200.png", imageHint: "mountain strong" },
-  { id: "peace", name: "Peace", imageUrl: "https://placehold.co/300x200.png", imageHint: "dove serene" },
-  { id: "healing", name: "Healing", imageUrl: "https://placehold.co/300x200.png", imageHint: "gentle light" },
-  { id: "family", name: "Family", imageUrl: "https://placehold.co/300x200.png", imageHint: "loving family" },
-  { id: "friendship", name: "Friendship", imageUrl: "https://placehold.co/300x200.png", imageHint: "helping hands" },
-  { id: "loss", name: "Loss & Grief", imageUrl: "https://placehold.co/300x200.png", imageHint: "comfort sorrow" },
-  { id: "temptation", name: "Temptation", imageUrl: "https://placehold.co/300x200.png", imageHint: "resisting choice" },
-  { id: "courage", name: "Courage", imageUrl: "https://placehold.co/300x200.png", imageHint: "brave heart" },
-  { id: "humility", name: "Humility", imageUrl: "https://placehold.co/300x200.png", imageHint: "bowed head" },
-  { id: "joy", name: "Joy", imageUrl: "https://placehold.co/300x200.png", imageHint: "smiling child" },
-  { id: "prayer", name: "Prayer", imageUrl: "https://placehold.co/300x200.png", imageHint: "praying hands" },
+  { id: "ansiedade", name: "Ansiedade", imageUrl: "https://placehold.co/300x200.png", imageHint: "calm serene" },
+  { id: "perdao", name: "Perdão", imageUrl: "https://placehold.co/300x200.png", imageHint: "open hands" },
+  { id: "proposito", name: "Propósito", imageUrl: "https://placehold.co/300x200.png", imageHint: "path light" },
+  { id: "fe", name: "Fé", imageUrl: "https://placehold.co/300x200.png", imageHint: "mustard seed" },
+  { id: "amor", name: "Amor", imageUrl: "https://placehold.co/300x200.png", imageHint: "heart warming" },
+  { id: "esperanca", name: "Esperança", imageUrl: "https://placehold.co/300x200.png", imageHint: "sunrise new" },
+  { id: "sabedoria", name: "Sabedoria", imageUrl: "https://placehold.co/300x200.png", imageHint: "ancient tree" },
+  { id: "gratidao", name: "Gratidão", imageUrl: "https://placehold.co/300x200.png", imageHint: "thankful heart" },
+  { id: "paciencia", name: "Paciência", imageUrl: "https://placehold.co/300x200.png", imageHint: "waiting peacefully" },
+  { id: "forca", name: "Força", imageUrl: "https://placehold.co/300x200.png", imageHint: "mountain strong" },
+  { id: "paz", name: "Paz", imageUrl: "https://placehold.co/300x200.png", imageHint: "dove serene" },
+  { id: "cura", name: "Cura", imageUrl: "https://placehold.co/300x200.png", imageHint: "gentle light" },
+  { id: "familia", name: "Família", imageUrl: "https://placehold.co/300x200.png", imageHint: "loving family" },
+  { id: "amizade", name: "Amizade", imageUrl: "https://placehold.co/300x200.png", imageHint: "helping hands" },
+  { id: "perda-luto", name: "Perda e Luto", imageUrl: "https://placehold.co/300x200.png", imageHint: "comfort sorrow" },
+  { id: "tentacao", name: "Tentação", imageUrl: "https://placehold.co/300x200.png", imageHint: "resisting choice" },
+  { id: "coragem", name: "Coragem", imageUrl: "https://placehold.co/300x200.png", imageHint: "brave heart" },
+  { id: "humildade", name: "Humildade", imageUrl: "https://placehold.co/300x200.png", imageHint: "bowed head" },
+  { id: "alegria", name: "Alegria", imageUrl: "https://placehold.co/300x200.png", imageHint: "smiling child" },
+  { id: "oracao", name: "Oração", imageUrl: "https://placehold.co/300x200.png", imageHint: "praying hands" },
 ];

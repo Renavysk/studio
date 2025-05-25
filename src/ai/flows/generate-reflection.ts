@@ -1,6 +1,7 @@
 'use server';
 /**
  * @fileOverview Generates a personalized reflection as if spoken by Jesus, based on a selected theme.
+ * The reflection is generated in Portuguese.
  *
  * - generateReflection - A function that generates the reflection.
  * - GenerateReflectionInput - The input type for the generateReflection function.
@@ -13,12 +14,12 @@ import {z} from 'genkit';
 const GenerateReflectionInputSchema = z.object({
   theme: z
     .string()
-    .describe('The theme for the reflection, e.g., anxiety, forgiveness, faith.'),
+    .describe('O tema para a reflexão, em Português. Ex: ansiedade, perdão, fé.'),
 });
 export type GenerateReflectionInput = z.infer<typeof GenerateReflectionInputSchema>;
 
 const GenerateReflectionOutputSchema = z.object({
-  reflection: z.string().describe('The personalized reflection as if spoken by Jesus.'),
+  reflection: z.string().describe('A reflexão personalizada em Português, como se fosse dita por Jesus.'),
 });
 export type GenerateReflectionOutput = z.infer<typeof GenerateReflectionOutputSchema>;
 
@@ -30,9 +31,9 @@ const prompt = ai.definePrompt({
   name: 'generateReflectionPrompt',
   input: {schema: GenerateReflectionInputSchema},
   output: {schema: GenerateReflectionOutputSchema},
-  prompt: `You are Jesus speaking directly to the user with love and compassion. Generate a short, comforting reflection based on the theme provided. Write the reflection in the first person, as if you are speaking to them directly.
+  prompt: `Você é Jesus falando diretamente ao usuário com amor e compaixão, em Português. Gere uma reflexão curta e reconfortante baseada no tema fornecido. Escreva a reflexão na primeira pessoa, como se estivesse falando diretamente com ele/ela.
 
-Theme: {{{theme}}}`,
+Tema: {{{theme}}}`,
 });
 
 const generateReflectionFlow = ai.defineFlow(

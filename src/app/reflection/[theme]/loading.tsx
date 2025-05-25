@@ -34,12 +34,12 @@ export default function LoadingReflection() {
         <Button asChild variant="outline" className="mt-10 rounded-full shadow" disabled>
           <Link href="/themes" className="flex items-center gap-2">
             <ArrowLeftCircle size={20} />
-            Back to Themes
+            Voltar aos Temas
           </Link>
         </Button>
       </main>
       <footer className="text-center py-6 text-muted-foreground text-sm">
-        Loading words of comfort...
+        Carregando palavras de conforto...
       </footer>
     </div>
   );

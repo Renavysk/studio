@@ -15,8 +15,8 @@ export function ThemeCard({ theme }: ThemeCardProps) {
         <CardHeader className="p-0 relative aspect-[3/2] w-full">
           <Image
             src={theme.imageUrl}
-            alt={theme.name}
-            data-ai-hint={theme.imageHint}
+            alt={theme.name} // theme.name is already in Portuguese
+            data-ai-hint={theme.imageHint} // Keep hints in English for image search
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
@@ -26,7 +26,7 @@ export function ThemeCard({ theme }: ThemeCardProps) {
             <CardTitle className="text-xl font-semibold text-primary group-hover:text-primary/80 transition-colors mb-2">{theme.name}</CardTitle>
           </div>
           <div className="mt-4 flex justify-end items-center text-sm text-accent-foreground group-hover:text-primary transition-colors">
-            Read Reflection <ArrowRightCircle size={18} className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+            Ler Reflexão <ArrowRightCircle size={18} className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
           </div>
         </CardContent>
       </Card>

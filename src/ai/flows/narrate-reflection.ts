@@ -2,7 +2,7 @@
 'use server';
 
 /**
- * @fileOverview Generates an audio narration of a given text, simulating the voice of Jesus.
+ * @fileOverview Generates an audio narration of a given text in Portuguese, simulating the voice of Jesus.
  *
  * - narrateReflection - A function that generates the narration.
  * - NarrateReflectionInput - The input type for the narrateReflection function.
@@ -15,7 +15,7 @@ import {z} from 'genkit';
 const NarrateReflectionInputSchema = z.object({
   reflectionText: z
     .string()
-    .describe('The text of the reflection to be narrated.'),
+    .describe('O texto da reflexão em Português a ser narrado.'),
 });
 export type NarrateReflectionInput = z.infer<typeof NarrateReflectionInputSchema>;
 
@@ -23,7 +23,7 @@ const NarrateReflectionOutputSchema = z.object({
   audioDataUri: z
     .string()
     .describe(
-      'The audio narration of the reflection text, as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.' // Corrected the grammar here
+      "A narração em áudio da reflexão em Português, como um data URI que deve incluir um tipo MIME e usar codificação Base64. Formato esperado: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
 export type NarrateReflectionOutput = z.infer<typeof NarrateReflectionOutputSchema>;
@@ -32,16 +32,19 @@ export async function narrateReflection(input: NarrateReflectionInput): Promise<
   return narrateReflectionFlow(input);
 }
 
+// Note: The Gemini 2.0 Flash model for audio generation might not have explicit Portuguese voice models.
+// It will attempt to narrate in Portuguese based on the input text, but the accent/quality might vary.
+// The prompt explicitly requests Portuguese narration.
 const narrateReflectionPrompt = ai.definePrompt({
   name: 'narrateReflectionPrompt',
   input: {schema: NarrateReflectionInputSchema},
   output: {schema: NarrateReflectionOutputSchema},
-  prompt: `You are an AI that generates an audio narration of the following text, simulating the voice of Jesus. The narration should be calm, soothing, and convey a sense of peace and connection.  The audio should be returned as a data URI.
+  prompt: `Você é uma IA que gera uma narração em áudio do seguinte texto, em Português, simulando a voz de Jesus. A narração deve ser calma, suave e transmitir uma sensação de paz e conexão. O áudio deve ser retornado como um data URI.
 
-Text: {{{reflectionText}}}`, // Corrected the grammar here
-  model: 'googleai/gemini-2.0-flash-exp',
+Texto: {{{reflectionText}}}`,
+  model: 'googleai/gemini-2.0-flash-exp', // This model is used for its multimodal capabilities including audio.
   config: {
-    responseModalities: ['TEXT', 'IMAGE'], // Required to use Gemini 2.0 to generate Audio
+    responseModalities: ['TEXT', 'IMAGE'], // 'IMAGE' modality is used for audio generation in this model as per docs
   },
 });
 
@@ -52,13 +55,25 @@ const narrateReflectionFlow = ai.defineFlow(
     outputSchema: NarrateReflectionOutputSchema,
   },
   async input => {
+    // The prompt for audio generation with gemini-2.0-flash-exp is the text itself.
+    // The system prompt within narrateReflectionPrompt guides the voice style and language.
     const {media} = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-exp',
-      prompt: input.reflectionText,
+      model: 'googleai/gemini-2.0-flash-exp', // Explicitly use the model capable of this.
+      prompt: `Gere um áudio em Português com uma voz masculina calma e compassiva para o seguinte texto: ${input.reflectionText}`, // More direct prompt for audio generation.
       config: {
-        responseModalities: ['TEXT', 'IMAGE'],
+        responseModalities: ['TEXT', 'IMAGE'], // Required for audio generation.
       },
     });
-    return {audioDataUri: media.url!};
+    if (!media || !media.url) {
+      // It's possible the model returns text if it cannot generate audio.
+      // Handle this by trying to call the prompt object which is configured for audio.
+      console.warn('ai.generate did not return media, attempting prompt call for audio');
+      const {output} = await narrateReflectionPrompt(input);
+      if (output && output.audioDataUri) {
+         return {audioDataUri: output.audioDataUri};
+      }
+      throw new Error('Falha ao gerar áudio. Nenhuma mídia retornada.');
+    }
+    return {audioDataUri: media.url};
   }
 );
