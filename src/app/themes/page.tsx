@@ -1,25 +1,17 @@
-import { themes } from '@/lib/themes';
-import { ThemeCard } from '@/app/components/ThemeCard';
-import { Header } from '@/app/components/Header';
+'use client'; // Added 'use client' for simplicity if it were to have interactions
 
 export default function ThemesPage() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="container mx-auto py-10 px-4 flex-grow">
-        <h2 className="text-4xl font-bold text-primary mb-3 text-center">Selecione um Tema</h2>
-        <p className="text-center text-lg text-foreground mb-10 max-w-2xl mx-auto">
-          Escolha um tópico que toque seu coração e receba uma reflexão reconfortante inspirada na sabedoria atemporal de Jesus.
+    <main className="flex flex-col items-center justify-center flex-grow p-4">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-primary mb-4">Página de Temas</h1>
+        <p className="text-lg text-muted-foreground">
+          Esta funcionalidade está temporariamente desativada para testes.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
-          {themes.map((theme) => (
-            <ThemeCard key={theme.id} theme={theme} />
-          ))}
-        </div>
-      </main>
-      <footer className="text-center py-6 text-muted-foreground text-sm">
-        Inspirado pela fé, criado com carinho.
-      </footer>
-    </div>
+        <p className="mt-4">
+          <a href="/" className="text-primary hover:underline">Voltar para a página inicial de teste</a>
+        </p>
+      </div>
+    </main>
   );
 }

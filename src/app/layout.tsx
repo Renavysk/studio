@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Jesus Disse',
-  description: 'Encontre consolo e orientação em reflexões baseadas nos ensinamentos de Jesus.',
+  title: 'Teste de IA Simplificado',
+  description: 'Um estado simplificado do aplicativo para testar a funcionalidade básica da IA.',
 };
 
 export default function RootLayout({
@@ -25,8 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased text-foreground min-h-screen flex flex-col`}>
-        {/* A classe bg-background foi removida daqui pois o background agora é uma imagem definida em globals.css */}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased text-foreground bg-background min-h-screen flex flex-col`}>
         {children}
         <Toaster />
       </body>
