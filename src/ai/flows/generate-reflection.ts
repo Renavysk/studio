@@ -44,38 +44,32 @@ const prompt = ai.definePrompt({
   name: 'generateReflectionPrompt',
   input: {schema: GenerateReflectionInputSchema},
   output: {schema: GenerateReflectionOutputSchema},
-  prompt: `Você é Jesus falando diretamente ao usuário com amor e compaixão, em Português.
-O tema da reflexão é: {{{theme}}}.
-
+  prompt: `Você é Jesus Cristo. Gere uma reflexão curta, amorosa e pessoal em Português sobre o tema fornecido: {{{theme}}}.
 {{#if baseReflection}}
-Considere a seguinte reflexão base e o versículo bíblico relacionado como principal inspiração. Sua tarefa é gerar uma reflexão curta, pessoal e reconfortante, na primeira pessoa, como se estivesse falando diretamente com o usuário, utilizando e adaptando as ideias fornecidas.
-Reflexão base: "{{{baseReflection}}}"
-{{#if verseReference}}Versículo de referência ({{{verseReference}}}): "{{{verseText}}}"{{/if}}
-A reflexão final deve ser coesa, amorosa e diretamente aplicável à preocupação do usuário sobre o tema, mantendo o tom original da reflexão base.
-{{else}}
-Gere uma reflexão curta e reconfortante baseada no tema fornecido.
-{{#if verseReference}}Você pode se inspirar no seguinte versículo ({{{verseReference}}}): "{{{verseText}}}"{{/if}}
-Escreva a reflexão na primeira pessoa, como se estivesse falando diretamente com ele/ela.
+Inspire-se nesta reflexão base: "{{{baseReflection}}}"
 {{/if}}
-
-Mantenha o tom compassivo e amoroso de Jesus.`,
+{{#if verseReference}}
+E neste versículo bíblico ({{{verseReference}}}): "{{{verseText}}}"
+{{/if}}
+Mantenha sempre um tom compassivo, amoroso e direto, como se estivesse falando com um filho ou filha amado(a).
+A reflexão deve ser concisa e reconfortante.`,
   config: {
     safetySettings: [
       {
         category: 'HARM_CATEGORY_HATE_SPEECH',
-        threshold: 'BLOCK_MEDIUM_AND_ABOVE', // Alterado de BLOCK_ONLY_HIGH
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
       },
       {
         category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-        threshold: 'BLOCK_MEDIUM_AND_ABOVE', // Alterado de BLOCK_ONLY_HIGH
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
       },
       {
         category: 'HARM_CATEGORY_HARASSMENT',
-        threshold: 'BLOCK_MEDIUM_AND_ABOVE', // Alterado de BLOCK_ONLY_HIGH
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
       },
       {
         category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-        threshold: 'BLOCK_NONE', // Alterado de BLOCK_ONLY_HIGH para ser mais permissivo
+        threshold: 'BLOCK_NONE',
       },
     ],
   },
@@ -88,11 +82,19 @@ const generateReflectionFlow = ai.defineFlow(
     outputSchema: GenerateReflectionOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    if (!output || !output.reflection) {
-      console.error('generateReflectionFlow: AI model did not return a valid reflection for input:', JSON.stringify(input), 'Output received:', JSON.stringify(output));
-      throw new Error('O modelo de IA não retornou uma reflexão válida.');
+    console.log('generateReflectionFlow: Input recebido:', JSON.stringify(input));
+    try {
+      const {output} = await prompt(input);
+      console.log('generateReflectionFlow: Output recebido da IA:', JSON.stringify(output));
+      if (!output || !output.reflection || output.reflection.trim() === "") {
+        console.error('generateReflectionFlow: AI model did not return a valid reflection for input:', JSON.stringify(input), 'Output received:', JSON.stringify(output));
+        throw new Error('O modelo de IA não retornou uma reflexão válida ou a reflexão está vazia.');
+      }
+      return output;
+    } catch (error) {
+      console.error('generateReflectionFlow: Erro durante a chamada do prompt:', error);
+      throw new Error('Ocorreu um erro ao comunicar com o modelo de IA para gerar a reflexão.');
     }
-    return output;
   }
 );
+
