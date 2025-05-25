@@ -6,14 +6,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { processText, type SimpleTextInput } from '@/ai/flows/simple-text-flow'; // Updated import path
+import { processText, type SimpleTextInput } from '@/ai/flows/simple-text-flow';
+import { narrateText, type NarrateTextInput } from '@/ai/flows/narrate-text-flow';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Volume2 } from 'lucide-react';
 
 export default function SimpleAIPage() {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isNarrating, setIsNarrating] = useState(false);
+  const [audioSrc, setAudioSrc] = useState('');
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,16 +31,49 @@ export default function SimpleAIPage() {
     }
 
     setIsLoading(true);
+    setIsNarrating(false);
     setOutputText('');
+    setAudioSrc('');
 
     try {
-      const input: SimpleTextInput = { inputText };
-      const result = await processText(input);
-      setOutputText(result.outputText);
+      const textInput: SimpleTextInput = { inputText };
+      const textResult = await processText(textInput);
+      setOutputText(textResult.outputText);
       toast({
         title: 'Sucesso!',
         description: 'Texto processado pela IA.',
       });
+
+      if (textResult.outputText && textResult.outputText.trim()) {
+        setIsNarrating(true);
+        try {
+          const narrationInput: NarrateTextInput = { textToNarrate: textResult.outputText };
+          const audioResult = await narrateText(narrationInput);
+          if (audioResult.audioDataUri) {
+            setAudioSrc(audioResult.audioDataUri);
+            toast({
+              title: 'Narração Pronta!',
+              description: 'O áudio da resposta está disponível.',
+            });
+          } else {
+            // Handle cases where narration might return empty if text is empty after all, or other minor issues
+             toast({
+              title: 'Narração Indisponível',
+              description: 'Não foi possível gerar o áudio para esta resposta.',
+              variant: 'default',
+            });
+          }
+        } catch (narrationError: any) {
+          console.error('Error calling narrateText flow:', narrationError);
+          toast({
+            title: 'Erro na Narração',
+            description: narrationError.message || 'Falha ao gerar o áudio. Verifique os logs do servidor Genkit.',
+            variant: 'destructive',
+          });
+        } finally {
+          setIsNarrating(false);
+        }
+      }
     } catch (error: any) {
       console.error('Error calling processText flow:', error);
       setOutputText(`Erro ao processar o texto: ${error.message}`);
@@ -57,7 +93,7 @@ export default function SimpleAIPage() {
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-primary">Teste Simples de IA com Genkit</CardTitle>
           <CardDescription>
-            Digite algo abaixo e a IA tentará processá-lo. Isso ajudará a verificar se a configuração básica da Genkit está funcionando.
+            Digite algo abaixo e a IA (Jesus) tentará processá-lo e fornecer uma narração.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -73,14 +109,19 @@ export default function SimpleAIPage() {
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Digite algo aqui..."
                 className="w-full"
-                disabled={isLoading}
+                disabled={isLoading || isNarrating}
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading || isNarrating}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processando...
+                  Processando Texto...
+                </>
+              ) : isNarrating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Gerando Narração...
                 </>
               ) : (
                 'Enviar para IA'
@@ -96,6 +137,23 @@ export default function SimpleAIPage() {
                 className="w-full h-32 bg-muted/50"
                 aria-label="Resposta da IA"
               />
+            </div>
+          )}
+          {isNarrating && !audioSrc && (
+            <div className="mt-4 flex items-center space-x-2">
+              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">Gerando narração da resposta...</p>
+            </div>
+          )}
+          {audioSrc && (
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold text-primary mb-2 flex items-center">
+                <Volume2 className="mr-2 h-5 w-5" />
+                Narração:
+              </h3>
+              <audio controls src={audioSrc} className="w-full" aria-label="Player da narração da resposta da IA">
+                Seu navegador não suporta o elemento de áudio.
+              </audio>
             </div>
           )}
         </CardContent>
