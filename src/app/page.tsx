@@ -16,7 +16,16 @@ export default function SimpleAIPage() {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [isLoadingText, setIsLoadingText] = useState(false);
+  // const [audioDataUri, setAudioDataUri] = useState<string | null>(null); // Narration removed
+  // const [isLoadingAudio, setIsLoadingAudio] = useState(false); // Narration removed
+  // const [audioError, setAudioError] = useState<string | null>(null); // Narration removed
   const { toast } = useToast();
+
+  // useEffect(() => { // Narration removed
+  //   // Limpar o áudio e erros de áudio quando o texto de saída mudar
+  //   setAudioDataUri(null);
+  //   setAudioError(null);
+  // }, [outputText]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,15 +40,66 @@ export default function SimpleAIPage() {
 
     setIsLoadingText(true);
     setOutputText('');
+    // setAudioDataUri(null); // Narration removed
+    // setIsLoadingAudio(false); // Narration removed
+    // setAudioError(null); // Narration removed
 
     try {
       const textInput: SimpleTextInput = { inputText };
       const textResult = await processText(textInput);
+      
+      if (!textResult || typeof textResult.outputText !== 'string') {
+        console.error('Error: AI model did not return a valid outputText string from processText. Received:', textResult);
+        throw new Error('O modelo de IA não retornou um texto válido.');
+      }
       setOutputText(textResult.outputText);
+
       toast({
         title: 'Sucesso!',
         description: 'Texto processado pela IA.',
       });
+
+      // Narration logic removed
+      // if (textResult.outputText) {
+      //   setIsLoadingAudio(true);
+      //   try {
+      //     const narrateInput: NarrateTextInput = { textToNarrate: textResult.outputText };
+      //     const narrateResult = await narrateText(narrateInput);
+      //     if (narrateResult && narrateResult.audioDataUri) {
+      //       setAudioDataUri(narrateResult.audioDataUri);
+      //       toast({
+      //         title: 'Narração Pronta!',
+      //         description: 'O áudio da resposta está pronto para ser tocado.',
+      //       });
+      //     } else {
+      //       console.warn('NarrateText flow did not return audioDataUri.');
+      //       setAudioError('A narração foi gerada, mas não contém dados de áudio válidos.');
+      //       toast({
+      //         title: 'Problema na Narração',
+      //         description: 'A narração foi gerada, mas não contém dados de áudio válidos.',
+      //         variant: 'destructive',
+      //       });
+      //     }
+      //   } catch (narrationError: any) {
+      //     console.error('Error calling narrateText flow on client:', narrationError);
+      //     let narrateErrorMessage = 'Falha ao gerar narração. Verifique os logs do servidor Genkit.';
+      //     if (narrationError instanceof Error && narrationError.message) {
+      //       narrateErrorMessage = narrationError.message;
+      //     } else if (typeof narrationError === 'string') {
+      //       narrateErrorMessage = narrationError;
+      //     } else if (narrationError && typeof narrationError === 'object' && narrationError.toString() !== '[object Object]') {
+      //       narrateErrorMessage = narrationError.toString();
+      //     }
+      //     setAudioError(narrateErrorMessage);
+      //     toast({
+      //       title: 'Erro de Narração',
+      //       description: narrateErrorMessage,
+      //       variant: 'destructive',
+      //     });
+      //   } finally {
+      //     setIsLoadingAudio(false);
+      //   }
+      // }
 
     } catch (error: any) {
       console.error('Error calling processText flow on client:', error);
@@ -65,20 +125,20 @@ export default function SimpleAIPage() {
   return (
     <main className="flex flex-col items-center justify-center flex-grow p-4 md:p-8">
       <Card className="w-full max-w-lg shadow-xl rounded-lg bg-card/90 backdrop-blur-sm">
-        <CardHeader className="rounded-t-lg items-center text-center">
-          <div className="mb-4 rounded-full overflow-hidden shadow-lg border-2 border-primary/50">
+        <CardHeader className="rounded-t-lg items-center text-center pt-6 pb-4"> {/* Ajuste no padding */}
+          <div className="mb-4 rounded-full overflow-hidden shadow-lg border-2 border-primary/50 mx-auto" style={{ width: 120, height: 120 }}>
             <Image
-              src="https://storage.googleapis.com/project-upload-prod/4d79428f-bbbf-4514-a28b-27e42e7383cd"
+              src="/jesus-sorrindo.png" // Caminho atualizado para a imagem local
               alt="Imagem de Jesus sorrindo"
               width={120}
               height={120}
-              className="object-cover"
+              className="object-cover w-full h-full" // Garantir que a imagem cubra o div
               data-ai-hint="jesus smile"
               priority
             />
           </div>
           <CardTitle className="text-3xl font-semibold text-primary">Jesus Disse</CardTitle>
-          <CardDescription className="text-card-foreground/80 mt-1">
+          <CardDescription className="text-card-foreground/80 mt-1 px-2"> {/* Adicionado padding horizontal */}
             Digite algo abaixo e Jesus tentará processá-lo e responder com sabedoria e amor.
           </CardDescription>
         </CardHeader>
@@ -118,6 +178,23 @@ export default function SimpleAIPage() {
                 className="w-full h-40 bg-muted/70 rounded-md text-base p-3 leading-relaxed"
                 aria-label="Resposta da IA"
               />
+              {/* Narration UI removed */}
+              {/* {isLoadingAudio && (
+                <div className="mt-4 flex items-center justify-center text-sm text-muted-foreground">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Gerando narração...
+                </div>
+              )}
+              {audioError && !isLoadingAudio && (
+                <p className="mt-2 text-sm text-destructive text-center">{audioError}</p>
+              )}
+              {audioDataUri && !isLoadingAudio && !audioError && (
+                <div className="mt-4">
+                  <audio controls src={audioDataUri} className="w-full">
+                    Seu navegador não suporta o elemento de áudio.
+                  </audio>
+                </div>
+              )} */}
             </div>
           )}
         </CardContent>
