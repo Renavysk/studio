@@ -8,11 +8,11 @@ import { HeartHandshake } from 'lucide-react';
 export default function WelcomePage() {
   return (
     <main className="flex flex-col items-center justify-center flex-grow p-4 text-center animate-fadeIn">
-      <div className="relative w-full max-w-2xl aspect-[3/2] mb-8">
+      <div className="relative w-full max-w-md aspect-square mb-8"> {/* Alterado para max-w-md e aspect-square */}
         <Image 
-          src="https://placehold.co/600x400.png"
-          alt="Paisagem serena estilo Ghibli com nuvens suaves e luz delicada"
-          data-ai-hint="ghibli landscape sky"
+          src="https://storage.googleapis.com/project-upload-prod/cbe6ae9f-6431-418e-9e7d-605991ac4388"
+          alt="Detalhe das mãos de 'A Criação de Adão', de Michelangelo, simbolizando a conexão divina e o toque da vida."
+          data-ai-hint="michelangelo creation"
           fill
           className="object-cover rounded-xl shadow-2xl"
           priority
