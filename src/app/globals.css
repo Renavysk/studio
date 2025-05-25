@@ -4,12 +4,17 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais suave */
+  background-image: url('https://storage.googleapis.com/project-upload-prod/cbe6ae9f-6431-418e-9e7d-605991ac4388');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Mantém o fundo fixo durante a rolagem */
 }
 
 @layer base {
   :root {
     /* Tema inspirado em "A Criação de Adão" - Tons terrosos, celestiais e suaves */
-    --background: 35 50% 96%; /* Bege muito claro / Off-white (Era: 208 100% 97%) */
+    --background: 35 50% 96%; /* Bege muito claro / Off-white (Era: 208 100% 97%) - Menos usado agora com a imagem de fundo */
     --foreground: 30 25% 25%; /* Marrom escuro suave para texto (Era: 214 32% 32%) */
     
     --card: 35 30% 92%; /* Bege um pouco mais escuro para cards (Era: 0 0% 100%) */
@@ -57,7 +62,7 @@ body {
 
   .dark {
     /* Dark theme inspirado nos tons celestiais e sombras da pintura */
-    --background: 220 20% 10%; /* Azul noite muito escuro (Era: 220 20% 12%) */
+    /* O background da imagem principal permanecerá, mas as cores dos componentes mudam */
     --foreground: 35 30% 85%; /* Bege claro para texto (Era: 210 40% 90%) */
 
     --card: 220 15% 15%; /* Azul noite um pouco mais claro (Era: 220 20% 15%) */
@@ -98,9 +103,10 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    /* Adiciona uma transição suave para mudanças de cor de fundo */
-    transition-property: background-color, color;
+    /* @apply bg-background text-foreground; Antigo, bg-background removido */
+    @apply text-foreground; /* Apenas a cor do texto é aplicada aqui */
+    /* Adiciona uma transição suave para mudanças de cor de texto */
+    transition-property: color;
     transition-duration: 300ms;
     transition-timing-function: ease-in-out;
   }

@@ -25,7 +25,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen flex flex-col`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased text-foreground min-h-screen flex flex-col`}>
+        {/* A classe bg-background foi removida daqui pois o background agora é uma imagem definida em globals.css */}
         {children}
         <Toaster />
       </body>
