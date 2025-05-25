@@ -3,7 +3,7 @@ import type {Metadata} from 'next';
 import { Inter } from 'next/font/google' // Using Inter as a gentle, legible font
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
-import { Header } from './components/Header'; // Assuming Header will be styled by globals
+import { Header } from './components/Header';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -11,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Jesus Disse - Teste IA',
-  description: 'Um estado simplificado do aplicativo para testar a funcionalidade básica da IA com a personalidade de Jesus.',
+  title: 'Jesus Disse',
+  description: 'Um aplicativo para encontrar palavras de conforto e reflexão.',
 };
 
 export default function RootLayout({
@@ -22,7 +22,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={inter.variable}>
-      <body className="antialiased text-foreground bg-background min-h-screen flex flex-col">
+      {/* Removed bg-background and text-foreground from body as it's handled in globals.css now */}
+      <body className="antialiased min-h-screen flex flex-col">
         <Header />
         <main className="flex-grow">
          {children}

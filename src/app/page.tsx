@@ -60,7 +60,8 @@ export default function SimpleAIPage() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center flex-grow p-4 md:p-8 bg-background">
+    // Removed bg-background from main to allow body background image to show
+    <main className="flex flex-col items-center justify-center flex-grow p-4 md:p-8">
       <Card className="w-full max-w-lg shadow-xl rounded-lg">
         <CardHeader className="rounded-t-lg">
           <CardTitle className="text-2xl font-bold text-primary">Jesus Disse</CardTitle>
@@ -71,7 +72,7 @@ export default function SimpleAIPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="inputText" className="block text-sm font-medium text-foreground mb-1">
+              <label htmlFor="inputText" className="block text-sm font-medium text-card-foreground mb-1">
                 Seu Texto:
               </label>
               <Input
@@ -101,14 +102,14 @@ export default function SimpleAIPage() {
               <Textarea
                 value={outputText}
                 readOnly
-                className="w-full h-32 bg-muted/50 rounded-md"
+                className="w-full h-32 bg-muted/50 rounded-md" // bg-muted/50 for slight transparency on the textarea
                 aria-label="Resposta da IA"
               />
             </div>
           )}
         </CardContent>
       </Card>
-       <footer className="text-center py-6 mt-8 text-sm text-muted-foreground">
+       <footer className="text-center py-6 mt-8 text-sm text-muted-foreground bg-background/70 p-4 rounded-md shadow-md">
         <p>Verifique o console do servidor Genkit para logs detalhados da API.</p>
         <p>Este é um modo de teste simplificado. As funcionalidades anteriores podem ser reintroduzidas.</p>
       </footer>
