@@ -1,3 +1,4 @@
+
 // src/ai/flows/narrate-reflection.ts
 'use server';
 
@@ -32,48 +33,70 @@ export async function narrateReflection(input: NarrateReflectionInput): Promise<
   return narrateReflectionFlow(input);
 }
 
-// Note: The Gemini 2.0 Flash model for audio generation might not have explicit Portuguese voice models.
-// It will attempt to narrate in Portuguese based on the input text, but the accent/quality might vary.
-// The prompt explicitly requests Portuguese narration.
-const narrateReflectionPrompt = ai.definePrompt({
-  name: 'narrateReflectionPrompt',
-  input: {schema: NarrateReflectionInputSchema},
-  output: {schema: NarrateReflectionOutputSchema},
-  prompt: `Você é uma IA que gera uma narração em áudio do seguinte texto, em Português, simulando a voz de Jesus. A narração deve ser calma, suave e transmitir uma sensação de paz e conexão. O áudio deve ser retornado como um data URI.
-
-Texto: {{{reflectionText}}}`,
-  model: 'googleai/gemini-2.0-flash-exp', // This model is used for its multimodal capabilities including audio.
-  config: {
-    responseModalities: ['TEXT', 'IMAGE'], // 'IMAGE' modality is used for audio generation in this model as per docs
-  },
-});
-
 const narrateReflectionFlow = ai.defineFlow(
   {
     name: 'narrateReflectionFlow',
     inputSchema: NarrateReflectionInputSchema,
     outputSchema: NarrateReflectionOutputSchema,
   },
-  async input => {
-    // The prompt for audio generation with gemini-2.0-flash-exp is the text itself.
-    // The system prompt within narrateReflectionPrompt guides the voice style and language.
-    const {media} = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-exp', // Explicitly use the model capable of this.
-      prompt: `Gere um áudio em Português com uma voz masculina calma e compassiva para o seguinte texto: ${input.reflectionText}`, // More direct prompt for audio generation.
-      config: {
-        responseModalities: ['TEXT', 'IMAGE'], // Required for audio generation.
-      },
-    });
-    if (!media || !media.url) {
-      // It's possible the model returns text if it cannot generate audio.
-      // Handle this by trying to call the prompt object which is configured for audio.
-      console.warn('ai.generate did not return media, attempting prompt call for audio');
-      const {output} = await narrateReflectionPrompt(input);
-      if (output && output.audioDataUri) {
-         return {audioDataUri: output.audioDataUri};
+  async (input: NarrateReflectionInput): Promise<NarrateReflectionOutput> => {
+    console.log('narrateReflectionFlow: Input recebido para narração:', JSON.stringify(input, null, 2));
+    try {
+      const {media, text} = await ai.generate({
+        model: 'googleai/gemini-2.0-flash-exp',
+        prompt: `Gere um áudio em Português com uma voz masculina calma e compassiva para o seguinte texto: ${input.reflectionText}`,
+        config: {
+          responseModalities: ['TEXT', 'IMAGE'], // 'IMAGE' for general media including audio
+           safetySettings: [ // Added similar safety settings as text gen for consistency
+            { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+            { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+            { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+          ],
+        },
+      });
+
+      console.log('narrateReflectionFlow: Output de ai.generate - media:', media ? JSON.stringify(media, null, 2) : 'null', 'text:', text);
+
+      if (!media || !media.url) {
+        console.error('narrateReflectionFlow: ai.generate não retornou mídia (áudio). Input:', JSON.stringify(input, null, 2), 'Resposta de texto (se houver):', text);
+        throw new Error('Falha ao gerar áudio: Nenhuma mídia de áudio foi retornada pelo modelo. Verifique os logs do servidor Genkit.');
       }
-      throw new Error('Falha ao gerar áudio. Nenhuma mídia retornada.');
+      
+      if (!media.url.startsWith('data:audio/')) {
+         console.warn('narrateReflectionFlow: URL de mídia retornada não parece ser de áudio:', media.url.substring(0,100));
+         // Potentially throw an error if strict audio format is required
+         // throw new Error('Falha ao gerar áudio: Formato de mídia inesperado. Esperado áudio.');
+      }
+
+      console.log('narrateReflectionFlow: Áudio gerado com sucesso (início do data URI):', media.url.substring(0, 100) + "...");
+      return {audioDataUri: media.url};
+
+    } catch (error: any) {
+      console.error('narrateReflectionFlow: Erro crítico durante a geração do áudio. Input:', JSON.stringify(input, null, 2));
+      console.error('narrateReflectionFlow: Detalhes do erro:', error);
+      if (error.message) {
+        console.error('narrateReflectionFlow: Mensagem de erro:', error.message);
+      }
+      if (error.stack) {
+        console.error('narrateReflectionFlow: Stacktrace:', error.stack);
+      }
+      if (error.details) {
+         console.error('narrateReflectionFlow: Detalhes específicos do erro (API?):', error.details);
+      }
+      if (error.status) {
+         console.error('narrateReflectionFlow: Status do erro (API?):', error.status);
+      }
+
+      let displayMessage = 'Falha ao gerar narração em áudio. Verifique os logs do servidor Genkit.';
+      if (error.message && (error.message.toLowerCase().includes('authentication') || error.message.toLowerCase().includes('api key'))) {
+        displayMessage = 'Falha na autenticação com o serviço de IA para áudio. Verifique a configuração da chave de API nos logs do servidor Genkit.';
+      } else if (error.message && error.message.toLowerCase().includes('quota')) {
+        displayMessage = 'Cota da API de IA para áudio excedida. Verifique os logs do servidor Genkit.';
+      } else if (error.message && error.message.toLowerCase().includes('model_not_found')) {
+        displayMessage = 'Modelo de IA para áudio não encontrado. Verifique a configuração do modelo nos logs do servidor Genkit.';
+      }
+      throw new Error(displayMessage);
     }
-    return {audioDataUri: media.url};
   }
 );

@@ -46,31 +46,18 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateReflectionOutputSchema},
   prompt: `Você é Jesus Cristo. Gere uma reflexão curta, amorosa e pessoal em Português sobre o tema fornecido: {{{theme}}}.
 {{#if baseReflection}}
-Inspire-se nesta reflexão base: "{{{baseReflection}}}"
+Use esta reflexão como inspiração: "{{{baseReflection}}}"
 {{/if}}
 {{#if verseReference}}
-E neste versículo bíblico ({{{verseReference}}}): "{{{verseText}}}"
+Baseie-se também neste versículo ({{{verseReference}}}): "{{{verseText}}}"
 {{/if}}
-Mantenha sempre um tom compassivo, amoroso e direto, como se estivesse falando com um filho ou filha amado(a).
-A reflexão deve ser concisa e reconfortante.`,
+Fale como se estivesse conversando com um filho ou filha. A mensagem deve ser concisa, reconfortante e edificante.`,
   config: {
     safetySettings: [
-      {
-        category: 'HARM_CATEGORY_HATE_SPEECH',
-        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
-      },
-      {
-        category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
-      },
-      {
-        category: 'HARM_CATEGORY_HARASSMENT',
-        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
-      },
-      {
-        category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-        threshold: 'BLOCK_NONE',
-      },
+      { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+      { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+      { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+      { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
     ],
   },
 });
@@ -81,20 +68,45 @@ const generateReflectionFlow = ai.defineFlow(
     inputSchema: GenerateReflectionInputSchema,
     outputSchema: GenerateReflectionOutputSchema,
   },
-  async input => {
-    console.log('generateReflectionFlow: Input recebido:', JSON.stringify(input));
+  async (input: GenerateReflectionInput) => {
+    console.log('generateReflectionFlow: Input recebido:', JSON.stringify(input, null, 2));
     try {
       const {output} = await prompt(input);
-      console.log('generateReflectionFlow: Output recebido da IA:', JSON.stringify(output));
+      console.log('generateReflectionFlow: Tentativa de prompt, output recebido:', JSON.stringify(output, null, 2));
+
       if (!output || !output.reflection || output.reflection.trim() === "") {
-        console.error('generateReflectionFlow: AI model did not return a valid reflection for input:', JSON.stringify(input), 'Output received:', JSON.stringify(output));
-        throw new Error('O modelo de IA não retornou uma reflexão válida ou a reflexão está vazia.');
+        console.error('generateReflectionFlow: AI model did not return a valid reflection or reflection is empty. Input:', JSON.stringify(input, null, 2), 'Output received:', JSON.stringify(output, null, 2));
+        throw new Error('O modelo de IA não retornou uma reflexão válida ou a reflexão está vazia. Verifique os logs do servidor Genkit para detalhes da API.');
       }
+      console.log('generateReflectionFlow: Reflexão gerada com sucesso:', output.reflection);
       return output;
-    } catch (error) {
-      console.error('generateReflectionFlow: Erro durante a chamada do prompt:', error);
-      throw new Error('Ocorreu um erro ao comunicar com o modelo de IA para gerar a reflexão.');
+    } catch (error: any) {
+      console.error('generateReflectionFlow: Erro crítico durante a geração da reflexão. Input:', JSON.stringify(input, null, 2));
+      console.error('generateReflectionFlow: Detalhes do erro:', error);
+      if (error.message) {
+        console.error('generateReflectionFlow: Mensagem de erro:', error.message);
+      }
+      if (error.stack) {
+        console.error('generateReflectionFlow: Stacktrace:', error.stack);
+      }
+      if (error.details) {
+         console.error('generateReflectionFlow: Detalhes específicos do erro (API?):', error.details);
+      }
+      if (error.status) {
+         console.error('generateReflectionFlow: Status do erro (API?):', error.status);
+      }
+
+      let displayMessage = 'Ocorreu um erro ao comunicar com o modelo de IA. Verifique os logs do servidor Genkit para mais detalhes.';
+      if (error.message && (error.message.toLowerCase().includes('authentication') || error.message.toLowerCase().includes('api key'))) {
+        displayMessage = 'Falha na autenticação com o serviço de IA. Verifique a configuração da chave de API nos logs do servidor Genkit.';
+      } else if (error.message && error.message.toLowerCase().includes('quota')) {
+        displayMessage = 'Cota da API de IA excedida. Verifique os logs do servidor Genkit.';
+      } else if (error.message && error.message.toLowerCase().includes('model_not_found')) {
+        displayMessage = 'Modelo de IA não encontrado. Verifique a configuração do modelo nos logs do servidor Genkit.';
+      }
+
+
+      throw new Error(displayMessage);
     }
   }
 );
-

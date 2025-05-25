@@ -1,17 +1,23 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais suave */
-  background-image: url('https://storage.googleapis.com/project-upload-prod/cbe6ae9f-6431-418e-9e7d-605991ac4388');
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-attachment: fixed; /* Mantém o fundo fixo durante a rolagem */
-}
-
 @layer base {
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais suave */
+    background-image: url('https://storage.googleapis.com/project-upload-prod/cbe6ae9f-6431-418e-9e7d-605991ac4388');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Mantém o fundo fixo durante a rolagem */
+    @apply text-foreground; /* Apenas a cor do texto é aplicada aqui */
+    /* Adiciona uma transição suave para mudanças de cor de texto */
+    transition-property: color;
+    transition-duration: 300ms;
+    transition-timing-function: ease-in-out;
+  }
+
   :root {
     /* Tema inspirado em "A Criação de Adão" - Tons terrosos, celestiais e suaves */
     --background: 35 50% 96%; /* Bege muito claro / Off-white (Era: 208 100% 97%) - Menos usado agora com a imagem de fundo */
@@ -102,12 +108,5 @@ body {
   * {
     @apply border-border;
   }
-  body {
-    /* @apply bg-background text-foreground; Antigo, bg-background removido */
-    @apply text-foreground; /* Apenas a cor do texto é aplicada aqui */
-    /* Adiciona uma transição suave para mudanças de cor de texto */
-    transition-property: color;
-    transition-duration: 300ms;
-    transition-timing-function: ease-in-out;
-  }
+  /* body já estilizado acima no mesmo @layer base */
 }
