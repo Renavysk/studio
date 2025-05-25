@@ -56,18 +56,27 @@ export default function SimpleAIPage() {
               description: 'O áudio da resposta está disponível.',
             });
           } else {
-            // Handle cases where narration might return empty if text is empty after all, or other minor issues
              toast({
               title: 'Narração Indisponível',
-              description: 'Não foi possível gerar o áudio para esta resposta.',
+              description: 'Não foi possível gerar o áudio para esta resposta (texto vazio ou problema menor).',
               variant: 'default',
             });
           }
         } catch (narrationError: any) {
-          console.error('Error calling narrateText flow:', narrationError);
+          console.error('Error calling narrateText flow on client:', narrationError);
+          // Try to extract a meaningful message from the error object
+          let errorMessage = 'Falha ao gerar o áudio. Verifique os logs do servidor Genkit para detalhes.';
+          if (narrationError instanceof Error && narrationError.message) {
+            errorMessage = narrationError.message;
+          } else if (typeof narrationError === 'string') {
+            errorMessage = narrationError;
+          } else if (narrationError && typeof narrationError === 'object' && narrationError.toString() !== '[object Object]') {
+            errorMessage = narrationError.toString();
+          }
+          
           toast({
             title: 'Erro na Narração',
-            description: narrationError.message || 'Falha ao gerar o áudio. Verifique os logs do servidor Genkit.',
+            description: errorMessage,
             variant: 'destructive',
           });
         } finally {
@@ -75,11 +84,19 @@ export default function SimpleAIPage() {
         }
       }
     } catch (error: any) {
-      console.error('Error calling processText flow:', error);
-      setOutputText(`Erro ao processar o texto: ${error.message}`);
+      console.error('Error calling processText flow on client:', error);
+      let errorMessage = 'Falha ao comunicar com a IA. Verifique os logs do servidor Genkit.';
+       if (error instanceof Error && error.message) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else if (error && typeof error === 'object' && error.toString() !== '[object Object]') {
+        errorMessage = error.toString();
+      }
+      setOutputText(`Erro ao processar o texto: ${errorMessage}`);
       toast({
         title: 'Erro de IA',
-        description: error.message || 'Falha ao comunicar com a IA. Verifique os logs do servidor Genkit.',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
