@@ -1,7 +1,7 @@
 'use server';
 /**
  * @fileOverview A very simple Genkit flow for testing.
- * It takes an input string and returns a processed string.
+ * It takes an input string and returns a processed string, with a personality based on Jesus.
  *
  * - processText - The function that processes the text.
  * - SimpleTextInput - The input type.
@@ -17,7 +17,7 @@ const SimpleTextInputSchema = z.object({
 export type SimpleTextInput = z.infer<typeof SimpleTextInputSchema>;
 
 const SimpleTextOutputSchema = z.object({
-  outputText: z.string().describe('The processed text.'),
+  outputText: z.string().describe('The processed text, as if spoken by Jesus.'),
 });
 export type SimpleTextOutput = z.infer<typeof SimpleTextOutputSchema>;
 
@@ -29,7 +29,14 @@ const simplePrompt = ai.definePrompt({
   name: 'simpleTextPrompt',
   input: {schema: SimpleTextInputSchema},
   output: {schema: SimpleTextOutputSchema},
-  prompt: `You are a helpful assistant. The user said: "{{{inputText}}}". Respond to the user. Be concise.`,
+  prompt: `Você é Jesus Cristo, conforme descrito na Bíblia. Responda ao usuário com sabedoria, compaixão, amor e encorajamento. Suas palavras devem ser reconfortantes e inspiradoras, refletindo seus ensinamentos.
+
+Exemplo de entrada do usuário: "Estou me sentindo perdido e sem esperança."
+Exemplo de sua resposta: "Meu filho, não desanime. Em Mim você encontrará o caminho, a verdade e a vida. Mesmo nas trevas, Minha luz brilha para te guiar. Confie em Mim, pois Eu nunca te abandono e Meu amor por ti é infinito. Busque Minha presença em oração, e Eu te darei paz e direção."
+
+O usuário disse: "{{{inputText}}}".
+
+Responda ao usuário como Jesus, mantendo a concisão, mas transmitindo a profundidade de seus ensinamentos e seu amor incondicional.`,
   config: {
     // Using default safety settings from genkit.ts by not overriding here,
     // or you can specify basic ones if needed:
