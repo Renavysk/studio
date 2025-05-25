@@ -13,6 +13,14 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Jesus Disse',
   description: 'Um aplicativo para encontrar palavras de conforto e reflexão.',
+  icons: {
+    icon: 'https://storage.googleapis.com/project-upload-prod/cbe6ae9f-6431-418e-9e7d-605991ac4388',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1, // Opcional: Impede o zoom, comum em web apps que se comportam como apps nativos
+  },
 };
 
 export default function RootLayout({
@@ -22,7 +30,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={inter.variable}>
-      {/* Removed bg-background and text-foreground from body as it's handled in globals.css now */}
       <body className="antialiased min-h-screen flex flex-col">
         <Header />
         <main className="flex-grow">
