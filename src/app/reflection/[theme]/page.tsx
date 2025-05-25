@@ -45,7 +45,7 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
     const reflectionOutput = await generateReflection(reflectionInput);
     reflectionText = reflectionOutput.reflection;
   } catch (e: any) { // Catch as 'any' to inspect properties
-    console.error(`Error generating reflection for theme "${currentTheme.name}":`);
+    console.error(`Error generating reflection for theme "${currentTheme.name}":`, e); // Log the error object here
     let caughtErrorMessage = "Detalhes do erro não disponíveis";
 
     if (e instanceof Error) {
@@ -53,7 +53,7 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
       console.error("Type: Error instance");
       console.error("Message:", e.message);
       console.error("Stack:", e.stack);
-      console.error("Full error object:", e);
+      // console.error("Full error object (instanceof Error):", e); // Redundant with the first console.error
     } else if (typeof e === 'string') {
       caughtErrorMessage = e;
       console.error("Type: string");
@@ -61,20 +61,21 @@ export default async function ReflectionPage({ params }: ReflectionPageProps) {
     } else {
       console.error("Type: unknown");
       try {
-        const serializedError = JSON.stringify(e, Object.getOwnPropertyNames(e), 2);
-        console.error("Serialized content:", serializedError);
+        // Attempt to get more info from non-Error objects
         if (e && typeof e.message === 'string') {
           caughtErrorMessage = e.message;
         } else if (e && typeof e.toString === 'function' && e.toString() !== '[object Object]') {
           caughtErrorMessage = e.toString();
         } else {
-          caughtErrorMessage = "Objeto de erro não padrão. Verifique o console para serialização."
+           const serializedError = JSON.stringify(e, Object.getOwnPropertyNames(e), 2);
+           console.error("Serialized content:", serializedError);
+           caughtErrorMessage = "Objeto de erro não padrão. Verifique o console para serialização.";
         }
       } catch (stringifyError) {
         console.error("Could not stringify error object:", stringifyError);
         caughtErrorMessage = "Erro não serializável detectado."
       }
-      console.error("Full error object:", e);
+      // console.error("Full error object (unknown type):", e); // Redundant with the first console.error
     }
     
     clientErrorMessage = `Encontramos um problema ao gerar sua reflexão: ${caughtErrorMessage}. Por favor, tente um tema diferente ou volte mais tarde. Verifique os logs do servidor Genkit para detalhes técnicos.`;
