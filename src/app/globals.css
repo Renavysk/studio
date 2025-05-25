@@ -99,6 +99,7 @@
   }
   body {
     background-image: url('https://storage.googleapis.com/project-upload-prod/187f793f-9b81-4e75-824a-f0a39f627f08');
+    background-color: transparent; /* Explicitly set background color to transparent */
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
