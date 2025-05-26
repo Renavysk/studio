@@ -8,6 +8,7 @@ export default function ReflectionPage({ params }: { params: { theme: string }})
         <p className="text-lg text-muted-foreground">
           Reflexão para o tema: <span className="font-semibold">{params.theme}</span>
         </p>
+        <img src="/jesus sorrindo.png" alt="Jesus Sorrindo" className="mx-auto my-4" style={{ maxWidth: '200px' }} />
         <p className="text-muted-foreground mt-2">
           Esta funcionalidade está temporariamente desativada para testes.
         </p>

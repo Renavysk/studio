@@ -98,7 +98,8 @@
     @apply border-border;
   }
   body {
-    background-color: hsl(var(--background)); /* Use the new background color */
+    background-image: url("/maos fundo.png"); /* Add background image */
+    background-color: hsl(var(--background)); 
     @apply text-foreground; /* Apply default text color from variables */
     font-feature-settings: "rlig" 1, "calt" 1; /* Consistent with Geist font */
     min-height: 100vh; /* Ensure body takes at least full viewport height */
