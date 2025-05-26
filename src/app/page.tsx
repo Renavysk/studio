@@ -8,9 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { processText, type SimpleTextInput } from '@/ai/flows/simple-text-flow';
-// import { narrateText, type NarrateTextInput } from '@/ai/flows/narrate-text-flow'; // Narration removed
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Share2 } from 'lucide-react'; // Adicionado Share2
 
 export default function SimpleAIPage() {
   const [inputText, setInputText] = useState('');
@@ -65,6 +64,49 @@ export default function SimpleAIPage() {
       });
     } finally {
       setIsLoadingText(false);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!outputText || outputText.startsWith('Erro ao processar o texto:')) return;
+
+    const shareText = `"${outputText}"\n\nDisse Jesus (via app Jesus Disse).`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Jesus Disse',
+          text: shareText,
+        });
+        // O toast de sucesso para navigator.share geralmente não é necessário,
+        // pois o sistema operacional fornece feedback.
+      } catch (error: any) {
+        // AbortError ocorre se o usuário fechar a caixa de diálogo de compartilhamento, não é um erro real.
+        if (error.name !== 'AbortError') {
+          console.error('Erro ao compartilhar nativamente:', error);
+          toast({
+            title: 'Erro ao Compartilhar',
+            description: 'Não foi possível usar o compartilhamento nativo.',
+            variant: 'destructive',
+          });
+        }
+      }
+    } else {
+      // Fallback para copiar para a área de transferência
+      try {
+        await navigator.clipboard.writeText(shareText);
+        toast({
+          title: 'Mensagem Copiada!',
+          description: 'A mensagem foi copiada para a sua área de transferência.',
+        });
+      } catch (err) {
+        console.error('Erro ao copiar para a área de transferência:', err);
+        toast({
+          title: 'Erro ao Copiar',
+          description: 'Não foi possível copiar a mensagem.',
+          variant: 'destructive',
+        });
+      }
     }
   };
 
@@ -124,6 +166,19 @@ export default function SimpleAIPage() {
                 className="w-full h-40 bg-muted/70 rounded-md text-base p-3 leading-relaxed"
                 aria-label="Resposta da IA"
               />
+              {!outputText.startsWith('Erro ao processar o texto:') && (
+                <div className="mt-4 flex justify-end">
+                  <Button
+                    variant="outline"
+                    onClick={handleShare}
+                    disabled={isLoadingText}
+                    className="rounded-md"
+                  >
+                    <Share2 className="mr-2 h-4 w-4" />
+                    Compartilhar Mensagem
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </CardContent>
