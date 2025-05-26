@@ -1,0 +1,18 @@
+
+# Configurações para deploy do Next.js na Netlify
+# https://docs.netlify.com/integrations/frameworks/next-js/overview/
+
+[build]
+  # Comando para construir o projeto. Netlify geralmente detecta isso automaticamente
+  # para projetos Next.js, mas é bom ser explícito.
+  command = "npm run build"
+
+  # Pasta onde os arquivos estáticos e funções serverless são colocados após o build.
+  # Para Next.js, é a pasta .next.
+  publish = ".next"
+
+# Este plugin é essencial para que a Netlify lide corretamente com
+# as funcionalidades do Next.js, como SSR, API Routes (usadas pela Genkit),
+# otimização de imagem, etc.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
