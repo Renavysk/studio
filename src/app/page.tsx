@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { processText, type SimpleTextInput } from '@/ai/flows/simple-text-flow';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Share2 } from 'lucide-react'; // Adicionado Share2
+import { Loader2, Share2 } from 'lucide-react';
 
 export default function SimpleAIPage() {
   const [inputText, setInputText] = useState('');
@@ -68,9 +68,18 @@ export default function SimpleAIPage() {
   };
 
   const handleShare = async () => {
-    if (!outputText || outputText.startsWith('Erro ao processar o texto:')) return;
+    if (!outputText || outputText.startsWith('Erro ao processar o texto:')) {
+      toast({
+        title: 'Nada para compartilhar',
+        description: 'Não há mensagem gerada para compartilhar ou a mensagem contém um erro.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     const shareText = `"${outputText}"\n\nDisse Jesus (via app Jesus Disse).`;
+    let sharedNatively = false;
+    let nativeShareAttemptedAndFailed = false;
 
     if (navigator.share) {
       try {
@@ -78,32 +87,39 @@ export default function SimpleAIPage() {
           title: 'Jesus Disse',
           text: shareText,
         });
-        // O toast de sucesso para navigator.share geralmente não é necessário,
-        // pois o sistema operacional fornece feedback.
+        sharedNatively = true;
+        // OS geralmente fornece feedback, então não precisamos de um toast aqui.
       } catch (error: any) {
-        // AbortError ocorre se o usuário fechar a caixa de diálogo de compartilhamento, não é um erro real.
-        if (error.name !== 'AbortError') {
+        if (error.name === 'AbortError') {
+          // User cancelled the share operation
+          console.log('Compartilhamento nativo cancelado pelo usuário.');
+          return; // Não prosseguir para o fallback de clipboard
+        } else {
+          // Outro erro com navigator.share (ex: PermissionDenied)
           console.error('Erro ao compartilhar nativamente:', error);
-          toast({
-            title: 'Erro ao Compartilhar',
-            description: 'Não foi possível usar o compartilhamento nativo.',
-            variant: 'destructive',
-          });
+          nativeShareAttemptedAndFailed = true;
+          // Não mostre o toast de erro ainda, vamos tentar o fallback.
         }
       }
-    } else {
-      // Fallback para copiar para a área de transferência
+    }
+
+    // Se o compartilhamento nativo não foi bem-sucedido OU não estava disponível
+    if (!sharedNatively) {
       try {
         await navigator.clipboard.writeText(shareText);
+        let toastDescription = 'A mensagem foi copiada para a sua área de transferência.';
+        if (nativeShareAttemptedAndFailed) {
+          toastDescription = 'O compartilhamento nativo não pôde ser usado. A mensagem foi copiada para a sua área de transferência.';
+        }
         toast({
           title: 'Mensagem Copiada!',
-          description: 'A mensagem foi copiada para a sua área de transferência.',
+          description: toastDescription,
         });
       } catch (err) {
-        console.error('Erro ao copiar para a área de transferência:', err);
+        console.error('Erro ao copiar para a área de transferência (fallback):', err);
         toast({
-          title: 'Erro ao Copiar',
-          description: 'Não foi possível copiar a mensagem.',
+          title: 'Erro ao Compartilhar',
+          description: 'Não foi possível usar o compartilhamento nativo nem copiar a mensagem. Por favor, copie manualmente.',
           variant: 'destructive',
         });
       }
@@ -116,7 +132,7 @@ export default function SimpleAIPage() {
         <CardHeader className="rounded-t-lg items-center text-center pt-6 pb-4">
           <div className="mb-4 rounded-full overflow-hidden shadow-lg border-2 border-primary/50 mx-auto" style={{ width: 120, height: 120 }}>
             <Image
-              src="/jesus disse.png" 
+              src="/jesus disse.png"
               alt="Imagem Jesus Disse"
               width={120}
               height={120}
