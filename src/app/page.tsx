@@ -86,12 +86,12 @@ export default function SimpleAIPage() {
         <CardHeader className="rounded-t-lg items-center text-center pt-6 pb-4"> {/* Ajuste no padding */}
           <div className="mb-4 rounded-full overflow-hidden shadow-lg border-2 border-primary/50 mx-auto" style={{ width: 120, height: 120 }}>
             <Image
-              src="/jesus-sorrindo.png" // Caminho atualizado para a imagem local
-              alt="Imagem de Jesus sorrindo"
+              src="/jesus disse.png" 
+              alt="Imagem Jesus Disse"
               width={120}
               height={120}
-              className="object-cover w-full h-full" // Garantir que a imagem cubra o div
-              data-ai-hint="jesus smile"
+              className="object-cover w-full h-full"
+              data-ai-hint="jesus logo"
               priority
             />
           </div>
