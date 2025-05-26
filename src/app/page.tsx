@@ -16,16 +16,7 @@ export default function SimpleAIPage() {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [isLoadingText, setIsLoadingText] = useState(false);
-  // const [audioDataUri, setAudioDataUri] = useState<string | null>(null); // Narration removed
-  // const [isLoadingAudio, setIsLoadingAudio] = useState(false); // Narration removed
-  // const [audioError, setAudioError] = useState<string | null>(null); // Narration removed
   const { toast } = useToast();
-
-  // useEffect(() => { // Narration removed
-  //   // Limpar o áudio e erros de áudio quando o texto de saída mudar
-  //   setAudioDataUri(null);
-  //   setAudioError(null);
-  // }, [outputText]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,9 +31,6 @@ export default function SimpleAIPage() {
 
     setIsLoadingText(true);
     setOutputText('');
-    // setAudioDataUri(null); // Narration removed
-    // setIsLoadingAudio(false); // Narration removed
-    // setAudioError(null); // Narration removed
 
     try {
       const textInput: SimpleTextInput = { inputText };
@@ -83,7 +71,7 @@ export default function SimpleAIPage() {
   return (
     <main className="flex flex-col items-center justify-center flex-grow p-4 md:p-8">
       <Card className="w-full max-w-lg shadow-xl rounded-lg bg-card/90 backdrop-blur-sm">
-        <CardHeader className="rounded-t-lg items-center text-center pt-6 pb-4"> {/* Ajuste no padding */}
+        <CardHeader className="rounded-t-lg items-center text-center pt-6 pb-4">
           <div className="mb-4 rounded-full overflow-hidden shadow-lg border-2 border-primary/50 mx-auto" style={{ width: 120, height: 120 }}>
             <Image
               src="/jesus disse.png" 
@@ -96,8 +84,8 @@ export default function SimpleAIPage() {
             />
           </div>
           <CardTitle className="text-3xl font-semibold text-primary">Jesus Disse</CardTitle>
-          <CardDescription className="text-card-foreground/80 mt-1 px-2"> {/* Adicionado padding horizontal */}
-            Digite algo abaixo e Jesus tentará processá-lo e responder com sabedoria e amor.
+          <CardDescription className="text-card-foreground/80 mt-1 px-2">
+            Digite algo abaixo e lhe responderei com sabedoria e amor.
           </CardDescription>
         </CardHeader>
         <CardContent>
