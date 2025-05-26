@@ -126,6 +126,24 @@ export default function SimpleAIPage() {
     }
   };
 
+  const handleCopyPix = async () => {
+    const pixKey = '9598d2ca-b2c2-492e-adda-4c471cd3bc05';
+    try {
+      await navigator.clipboard.writeText(pixKey);
+      toast({
+        title: 'Chave Pix Copiada!',
+        description: 'A chave Pix foi copiada para a sua área de transferência.',
+      });
+    } catch (err) {
+      console.error('Erro ao copiar chave Pix:', err);
+      toast({
+        title: 'Erro ao Copiar',
+        description: 'Não foi possível copiar a chave Pix. Por favor, copie manualmente.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <main className="flex flex-col items-center justify-center flex-grow p-4 md:p-8">
       <Card className="w-full max-w-lg shadow-xl rounded-lg bg-card/90 backdrop-blur-sm">
@@ -202,6 +220,13 @@ export default function SimpleAIPage() {
        <footer className="text-center py-6 mt-10 text-sm text-foreground/90 bg-background/50 backdrop-blur-sm p-4 rounded-md shadow-md max-w-lg w-full">
         <p>Lembre-se, estas são palavras geradas por IA, inspiradas nos ensinamentos de Jesus.</p>
         <p>Use-as para reflexão e encorajamento.</p>
+        <p className="mt-4">Ajude-nos a manter esse app funcionando.</p>
+        <p>
+          Nosso pix para doação:{' '}
+          <span className="font-mono cursor-pointer text-primary hover:underline" onClick={handleCopyPix} title="Clique para copiar a chave Pix">
+            9598d2ca-b2c2-492e-adda-4c471cd3bc05
+          </span>
+        </p>
       </footer>
     </main>
   );
