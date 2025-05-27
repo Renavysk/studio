@@ -222,7 +222,7 @@ export default function SimpleAIPage() {
         <p>Use-as para reflexão e encorajamento.</p>
         <p className="mt-4">Ajude-nos a manter esse app funcionando.</p>
         <p>
-          Nosso pix para doação:{' '}
+          Nosso pix para doações:{' '}
           <span className="font-mono cursor-pointer text-primary hover:underline" onClick={handleCopyPix} title="Clique para copiar a chave Pix">
             9598d2ca-b2c2-492e-adda-4c471cd3bc05
           </span>
